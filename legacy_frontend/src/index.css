@@ -1,0 +1,142 @@
+/* Import a clean, modern font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* --- LIGHT THEME (White & Blue) --- */
+  --bg: #ffffff;
+  --text: #475569;         /* Slate grey for readability */
+  --text-h: #0f172a;       /* Deep navy for headings */
+  --border: #e2e8f0;
+  --code-bg: #f1f5f9;
+  
+  /* The Primary Blue Accent */
+  --accent: #2563eb; 
+  --accent-bg: rgba(37, 99, 235, 0.1);
+  --accent-border: rgba(37, 99, 235, 0.4);
+  
+  --shadow: rgba(0, 0, 0, 0.05) 0 10px 15px -3px, rgba(0, 0, 0, 0.03) 0 4px 6px -2px;
+
+  /* Fonts: Modern Sans-Serif Stack */
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  font: 16px/1.6 var(--sans);
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* --- DARK THEME (Black/Navy & Blue) --- */
+    --bg: #0f172a;         /* Deep Navy Black */
+    --text: #94a3b8;       /* Muted slate */
+    --text-h: #f1f5f9;     /* Off-white for headings */
+    --border: #1e293b;
+    --code-bg: #1e293b;
+    
+    /* Blue stays consistent but stands out more */
+    --accent: #3b82f6; 
+    --accent-bg: rgba(59, 130, 246, 0.15);
+    
+    --shadow: rgba(0, 0, 0, 0.3) 0 10px 15px -3px;
+  }
+}
+
+/* ── THE FLUID FIX ── */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  background: var(--bg); /* Infinite background color */
+}
+
+#root {
+  width: 100%;             /* Stretches to fill the browser */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Container for keeping content centered at 1126px */
+.content-container {
+  width: 100%;
+  max-width: 1126px;
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+/* --- TYPOGRAPHY UPDATES --- */
+h1, h2, h3, h4 {
+  font-family: var(--sans);
+  color: var(--text-h);
+  font-weight: 800;        /* Bold, heavy headings for a tech look */
+  letter-spacing: -0.03em; /* Tighter spacing for modern feel */
+}
+
+h1 {
+  font-size: clamp(32px, 8vw, 56px);
+  line-height: 1.1;
+  margin: 40px 0 24px;
+}
+
+h2 {
+  font-size: clamp(24px, 4vw, 32px);
+  line-height: 1.2;
+}
+
+p { 
+  margin-bottom: 1.5rem;
+  line-height: 1.7; 
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  background: var(--code-bg);
+  color: var(--accent);    /* Code looks "active" in your accent blue */
+  padding: 0.2em 0.5em;
+  border-radius: 6px;
+}
+
+/* Helper for smooth transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* Custom modern scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Selection highlight color */
+::selection {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* Base button animations */
+button {
+  outline: none;
+}
+button:active {
+  transform: scale(0.97) !important;
+}

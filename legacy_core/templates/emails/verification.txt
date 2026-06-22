@@ -1,0 +1,22 @@
+DIGITAL LEGACY - ACCOUNT VERIFICATION
+=====================================
+
+Hello {{ username }},
+
+Thank you for creating your Digital Legacy vault. To complete your account setup, please verify your email address using the code below.
+
+YOUR VERIFICATION CODE:
+
+{{ code }}
+
+This code expires in {{ expiry_hours }} hours.
+
+TO VERIFY YOUR ACCOUNT:
+Visit: {{ verify_url }}
+
+SECURITY NOTE:
+If you did not create this account, you can safely ignore this message. Your account will not be activated without verification.
+
+---
+Digital Legacy — Keep your digital affairs secure and organized
+www.digitallegacy.com
