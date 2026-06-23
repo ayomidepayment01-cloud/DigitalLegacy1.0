@@ -1,13 +1,15 @@
 from pathlib import Path
 import os
+import dj_database_url
 from decouple import config
+from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- CORE SECURITY ---
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-vu=+@v&*g+7(x4e*c4$)ik7)6ki(gr9qdcb#n=0915q%r$rxo(')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,digital-legacy-backend.onrender.com').split(',')
 
 # --- APPS ---
 INSTALLED_APPS = [
@@ -27,6 +29,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Top priority
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -56,10 +59,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'legacy_backend.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL', default=f'sqlite:///{BASE_DIR}/db.sqlite3'),
+        conn_max_age=600
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -75,6 +78,7 @@ TIME_ZONE = 'Africa/Lagos'
 USE_I18N = True
 USE_TZ = True
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # --- PROJECT SPECIFIC CONFIG ---
@@ -96,11 +100,9 @@ if not SENDGRID_API_KEY:
     EMAIL_TIMEOUT = 60
 
 if SENDGRID_API_KEY:
-    # When using SendGrid we prefer a verified sender/domain
     DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Digital Legacy <noreply@digitallegacy.io>')
     SERVER_EMAIL = config('SERVER_EMAIL', default='Digital Legacy <noreply@digitallegacy.io>')
 else:
-    # For SMTP (Gmail) use the authenticated account as the from address to reduce rejections
     DEFAULT_FROM_EMAIL = f"{EMAIL_HOST_USER}"
     SERVER_EMAIL = f"{EMAIL_HOST_USER}"
 # --- URL ROUTING & CORS ---
@@ -111,30 +113,39 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://digital-legacy-1-0.vercel.app",
 ]
 
-from corsheaders.defaults import default_headers
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'x-csrftoken',
 ]
 
 cors_origins = config('CORS_ALLOWED_ORIGINS', default='http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173').split(',')
-CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins]
+CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins] + ["https://digital-legacy-1-0.vercel.app"]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://digital-legacy-1-0.vercel.app",
 ]
 
 # --- SESSION & COOKIE SAFETY ---
-SESSION_COOKIE_SAMESITE = 'Lax'  # Standard setting for localhost development
-CSRF_COOKIE_SAMESITE = 'Lax'    # Standard setting for localhost development
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'
+    CSRF_COOKIE_SAMESITE = 'None'
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+else:
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    CSRF_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+
 SESSION_COOKIE_HTTPONLY = True 
-SESSION_COOKIE_SECURE = False  # Set to False in DEBUG for localhost (no HTTPS needed)
-CSRF_COOKIE_SECURE = False     # Set to False in DEBUG for localhost (no HTTPS needed)
-SESSION_COOKIE_AGE = 3600  # 1 hour
+SESSION_COOKIE_AGE = 3600
 
 # --- REST FRAMEWORK ---
 REST_FRAMEWORK = {
@@ -145,7 +156,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
 }
-import os
 
 # --- MEDIA FILE CONFIGURATION ---
 MEDIA_URL = '/media/'
