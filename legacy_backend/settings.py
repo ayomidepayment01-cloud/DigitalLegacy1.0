@@ -159,3 +159,13 @@ print(f"🔍 Folder exists: {os.path.exists(MEDIA_ROOT)}\n")
 # During local development, print emails to console to avoid external delivery issues
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+    # TEMPORARY: Make ayomide an admin
+from legacy_core.models import CustomUser
+try:
+    user = CustomUser.objects.get(username='ayomide')
+    user.is_staff = True
+    user.is_superuser = True
+    user.save()
+except CustomUser.DoesNotExist:
+    pass
