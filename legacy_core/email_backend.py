@@ -1,7 +1,9 @@
 from django.core.mail.backends.base import BaseEmailBackend
 from django.conf import settings
 import urllib.request
+import urllib.error
 import json
+
 
 class ResendBackend(BaseEmailBackend):
     def send_messages(self, email_messages):
@@ -51,9 +53,15 @@ class ResendBackend(BaseEmailBackend):
                     res_body = response.read().decode("utf-8")
                     print(f"[ResendBackend] Email successfully sent to {message.to}")
                     num_sent += 1
+            except urllib.error.HTTPError as http_err:
+                err_body = http_err.read().decode("utf-8")
+                print(f"[ResendBackend] HTTP Error {http_err.code} sending to {message.to}: {err_body}")
+                if not self.fail_silently:
+                    raise
             except Exception as e:
                 print(f"[ResendBackend] ERROR sending to {message.to}: {e}")
                 if not self.fail_silently:
                     raise
+
                     
         return num_sent
