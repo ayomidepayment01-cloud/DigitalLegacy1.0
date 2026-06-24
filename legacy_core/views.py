@@ -141,6 +141,7 @@ class RegisterView(views.APIView):
 # --- VERIFICATION & 2FA ---
 class VerifyEmailView(views.APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
     def post(self, request):
         email = request.data.get('email')
         code = request.data.get('code')
@@ -174,7 +175,9 @@ class VerifyEmailView(views.APIView):
 
 class ResendVerificationView(views.APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
     def post(self, request):
+
         email = request.data.get('email')
         try:
             pending = PendingRegistration.objects.get(email=email)
