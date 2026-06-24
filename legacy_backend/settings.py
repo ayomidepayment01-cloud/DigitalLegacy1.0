@@ -104,7 +104,7 @@ if not SENDGRID_API_KEY:
     EMAIL_USE_SSL = False
     EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='helpdeskdigitallegacy@gmail.com')
     EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='jidoopjmxfzjbmof')
-    EMAIL_TIMEOUT = 60
+    EMAIL_TIMEOUT = 10
 
 if SENDGRID_API_KEY:
     DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Digital Legacy <noreply@digitallegacy.io>')
