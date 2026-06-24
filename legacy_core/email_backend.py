@@ -44,10 +44,12 @@ class ResendBackend(BaseEmailBackend):
                     data=json.dumps(payload).encode("utf-8"),
                     headers={
                         "Authorization": f"Bearer {api_key}",
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "User-Agent": "DigitalLegacyApp/1.0"
                     },
                     method="POST"
                 )
+
                 
                 with urllib.request.urlopen(req, timeout=10) as response:
                     res_body = response.read().decode("utf-8")

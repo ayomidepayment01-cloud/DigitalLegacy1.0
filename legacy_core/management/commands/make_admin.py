@@ -5,8 +5,10 @@ class Command(BaseCommand):
     help = 'Creates or elevates user ayomide to superuser'
 
     def handle(self, *args, **options):
-        # 1. Clean up pending registrations to avoid conflicts
-        pending = PendingRegistration.objects.filter(username='ayomide').first()
+        # 1. Clean up ALL pending registrations to avoid conflicts and free up test emails
+        PendingRegistration.objects.all().delete()
+        pending = None  # No longer needed to find specific pending record since they are all deleted
+
         
         try:
             user = CustomUser.objects.get(username='ayomide')
