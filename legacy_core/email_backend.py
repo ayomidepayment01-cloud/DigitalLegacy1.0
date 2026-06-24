@@ -39,13 +39,15 @@ class ResendBackend(BaseEmailBackend):
                     payload["text"] = message.body
 
                 # Send HTTP Request
+                # Cloudflare might block default urllib user-agents with 403 (error code 1010).
+                # We use a standard browser user-agent to bypass basic bot-blocking.
                 req = urllib.request.Request(
                     "https://api.resend.com/emails",
                     data=json.dumps(payload).encode("utf-8"),
                     headers={
                         "Authorization": f"Bearer {api_key}",
                         "Content-Type": "application/json",
-                        "User-Agent": "DigitalLegacyApp/1.0"
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
                     },
                     method="POST"
                 )

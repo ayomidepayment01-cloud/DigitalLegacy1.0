@@ -151,9 +151,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Debug: Print MEDIA_ROOT path on startup
-print(f"\n🔍 MEDIA_ROOT configured to: {MEDIA_ROOT}")
-print(f"🔍 MEDIA_URL configured to: {MEDIA_URL}")
-print(f"🔍 Folder exists: {os.path.exists(MEDIA_ROOT)}\n")
+print(f"\n MEDIA_ROOT configured to: {MEDIA_ROOT}")
+print(f" MEDIA_URL configured to: {MEDIA_URL}")
+print(f" Folder exists: {os.path.exists(MEDIA_ROOT)}\n")
 
 # During local development, print emails to console to avoid external delivery issues
 if DEBUG:
