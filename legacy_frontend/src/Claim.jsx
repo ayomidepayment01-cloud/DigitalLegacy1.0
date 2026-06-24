@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from './api';
 import { useSearchParams } from 'react-router-dom';
 import { Shield, Unlock, Lock, Mail, Key, Eye, EyeOff, Info, User, CheckCircle, Copy } from './icons';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -25,7 +25,7 @@ function Claim() {
   const fetchNotesFor = async (email) => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:8000/api/claim/?email=${email}`);
+      const res = await api.get(`claim/?email=${email}`);
       setNotes(res.data.notes || []);
       setStep(2);
     } catch (err) {

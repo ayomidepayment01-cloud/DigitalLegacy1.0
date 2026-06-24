@@ -2,7 +2,6 @@ from pathlib import Path
 import os
 import dj_database_url
 from decouple import config
-from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -58,11 +57,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'legacy_backend.wsgi.application'
 
+db_config = dj_database_url.config(
+    default=config('DATABASE_URL', default=f'sqlite:///{BASE_DIR}/db.sqlite3'),
+    conn_max_age=600
+)
+
+# Enforce SSL for PostgreSQL in production (e.g., Render/Neon/Supabase)
+if not DEBUG and db_config.get('ENGINE') == 'django.db.backends.postgresql':
+    db_config['OPTIONS'] = {
+        'sslmode': 'require',
+    }
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL', default=f'sqlite:///{BASE_DIR}/db.sqlite3'),
-        conn_max_age=600
-    )
+    'default': db_config
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -108,28 +115,11 @@ else:
 # --- URL ROUTING & CORS ---
 APPEND_SLASH = True
 CORS_ALLOW_CREDENTIALS = True 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://digital-legacy-1-0.vercel.app",
-]
-
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    'x-csrftoken',
-]
-
 cors_origins = config('CORS_ALLOWED_ORIGINS', default='http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173').split(',')
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins] + ["https://digital-legacy-1-0.vercel.app"]
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://digital-legacy-1-0.vercel.app",
-]
+# Synchronize CSRF trusted origins with CORS origins to prevent CSRF errors in production
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS.copy()
 
 # --- SESSION & COOKIE SAFETY ---
 if not DEBUG:
