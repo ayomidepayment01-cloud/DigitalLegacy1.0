@@ -138,12 +138,13 @@ SESSION_COOKIE_AGE = 3600
 # --- REST FRAMEWORK ---
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
+        'legacy_core.authentication.CsrfExemptSessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
 }
+
 
 # --- MEDIA FILE CONFIGURATION ---
 MEDIA_URL = '/media/'
