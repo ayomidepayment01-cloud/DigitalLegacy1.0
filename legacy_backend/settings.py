@@ -103,7 +103,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = 'no-reply@digitallegacy.com' # Use your verified domain/email
+DEFAULT_FROM_EMAIL = 'ayomidepayment01@gmail.com' # Verified Brevo Sender
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 # --- URL ROUTING & CORS ---
