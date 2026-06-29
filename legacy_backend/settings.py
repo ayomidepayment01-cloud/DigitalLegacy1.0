@@ -92,7 +92,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'legacy_core.CustomUser'
 
 # --- EMAIL CONFIGURATION ---
-EMAIL_BACKEND = 'legacy_core.email_backend.BrevoHTTPBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp-relay.brevo.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
