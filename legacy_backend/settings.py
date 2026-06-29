@@ -105,7 +105,10 @@ SERVER_EMAIL = DEFAULT_FROM_EMAIL
 APPEND_SLASH = True
 CORS_ALLOW_CREDENTIALS = True 
 cors_origins = config('CORS_ALLOWED_ORIGINS', default='http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173').split(',')
-CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins] + ["https://digital-legacy-1-0.vercel.app"]
+CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins] + [
+    "https://digital-legacy-1-0.vercel.app",
+    "https://digital-legacy1-0-tl8v.vercel.app"
+]
 
 # Synchronize CSRF trusted origins with CORS origins to prevent CSRF errors in production
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS.copy()
