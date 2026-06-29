@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # --- CORE SECURITY ---
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-vu=+@v&*g+7(x4e*c4$)ik7)6ki(gr9qdcb#n=0915q%r$rxo(')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,digital-legacy-backend.onrender.com').split(',')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,digital-legacy-backend.onrender.com,digital-legacy-backend-6lef.onrender.com').split(',')
 
 # --- APPS ---
 INSTALLED_APPS = [
@@ -109,11 +109,17 @@ SERVER_EMAIL = DEFAULT_FROM_EMAIL
 # --- URL ROUTING & CORS ---
 APPEND_SLASH = True
 CORS_ALLOW_CREDENTIALS = True 
-cors_origins = config('CORS_ALLOWED_ORIGINS', default='http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173').split(',')
-CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins] + [
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
     "https://digital-legacy-1-0.vercel.app",
-    "https://digital-legacy1-0-tl8v.vercel.app"
+    "https://digital-legacy1-0-tl8v.vercel.app",
 ]
+env_origins = config('CORS_ALLOWED_ORIGINS', default='')
+if env_origins:
+    CORS_ALLOWED_ORIGINS.extend([origin.strip() for origin in env_origins.split(',')])
 
 # Synchronize CSRF trusted origins with CORS origins to prevent CSRF errors in production
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS.copy()
@@ -154,6 +160,4 @@ print(f"\n MEDIA_ROOT configured to: {MEDIA_ROOT}")
 print(f" MEDIA_URL configured to: {MEDIA_URL}")
 print(f" Folder exists: {os.path.exists(MEDIA_ROOT)}\n")
 
-# During local development, print emails to console to avoid external delivery issues
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# The DEBUG email ghost trap has been removed to ensure emails always send.
