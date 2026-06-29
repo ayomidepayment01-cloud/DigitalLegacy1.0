@@ -97,7 +97,7 @@ import socket
 # Force IPv4 to prevent "Network is unreachable" errors on cloud environments
 socket.setdefaulttimeout(30)
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'legacy_core.email_backend.BrevoHTTPBackend'
 EMAIL_HOST = 'smtp-relay.brevo.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
