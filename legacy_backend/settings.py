@@ -92,6 +92,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'legacy_core.CustomUser'
 
 # --- EMAIL CONFIGURATION ---
+import socket
+
+# Force IPv4 to prevent "Network is unreachable" errors on cloud environments
+socket.setdefaulttimeout(30)
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp-relay.brevo.com'
 EMAIL_PORT = 587
