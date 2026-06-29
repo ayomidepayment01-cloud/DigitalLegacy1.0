@@ -2,6 +2,36 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.conf import settings
 from django.views.static import serve
+from django.http import HttpResponse
+
+def fix_db_view(request):
+    from legacy_core.models import CustomUser
+    messages = []
+    
+    # 1. Delete the stuck user
+    deleted, _ = CustomUser.objects.filter(email='dennytfx@gmail.com').delete()
+    if deleted:
+        messages.append("✅ Deleted stuck user 'dennytfx@gmail.com'.")
+    else:
+        messages.append("ℹ️ Stuck user 'dennytfx@gmail.com' not found (already deleted).")
+        
+    # 2. Recreate/Reset the admin account
+    admin_user, created = CustomUser.objects.get_or_create(
+        username='Admin', 
+        defaults={'email': 'Dennytissy2022@gmail.com'}
+    )
+    admin_user.set_password('DigitalLegacy2026!')
+    admin_user.is_staff = True
+    admin_user.is_superuser = True
+    admin_user.save()
+    
+    if created:
+        messages.append("✅ Created new admin account.")
+    else:
+        messages.append("✅ Reset existing admin account.")
+        
+    messages.append("<br><br><b>Your Admin Login is now:</b><br>Username: Admin<br>Password: DigitalLegacy2026!")
+    return HttpResponse("<br>".join(messages))
 from legacy_core.views import (
     LoginView,
     LogoutView,
@@ -26,6 +56,7 @@ from legacy_core.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('fix-db/', fix_db_view),
     
     # --- Auth & Profile ---
     path('api/login/', LoginView.as_view(), name='login'),
