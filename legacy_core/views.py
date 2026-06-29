@@ -98,7 +98,7 @@ class RegisterView(views.APIView):
                     'username': pending.username,
                     'code': otp_code,
                     'expiry_hours': 24,
-                    'verify_url': f"{request.scheme}://{request.get_host()}/verify"
+                    'verify_url': f"https://digital-legacy1-0-tl8v.vercel.app/verify"
                 }
                 html_message = render_to_string('emails/verification.html', ctx)
                 text_message = render_to_string('emails/verification.txt', ctx)
@@ -189,7 +189,7 @@ class ResendVerificationView(views.APIView):
                     'username': pending.username,
                     'code': new_code,
                     'expiry_hours': 24,
-                    'verify_url': f"{request.scheme}://{request.get_host()}/verify"
+                    'verify_url': f"https://digital-legacy1-0-tl8v.vercel.app/verify"
                 }
                 html_message = render_to_string('emails/verification.html', ctx)
                 text_message = render_to_string('emails/verification.txt', ctx)
@@ -267,7 +267,7 @@ class DeceasedTriggerTest(views.APIView):
                 note_titles = "\n".join([f"- {n.title} ({n.get_category_display()})" for n in notes])
                 send_mail(
                     subject=f"Digital Legacy Access Granted: {user.username}",
-                    message=f"Hello {b.name},\n\nDigital Legacy Access Granted. System has detected inactivity.\n\nASSETS:\n{note_titles}\n\nVisit: http://localhost:3000/claim?email={b.email}",
+                    message=f"Hello {b.name},\n\nDigital Legacy Access Granted. System has detected inactivity.\n\nASSETS:\n{note_titles}\n\nVisit: https://digital-legacy1-0-tl8v.vercel.app/claim?email={b.email}",
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[b.email],
                     fail_silently=True, 
