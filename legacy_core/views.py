@@ -16,6 +16,7 @@ from django.db import transaction
 from django.contrib.auth.hashers import make_password
 from .models import CustomUser, Beneficiary, LegacyNote, LegacyAsset, PendingRegistration
 from .serializers import UserSerializer, BeneficiarySerializer, LegacyNoteSerializer, LegacyAssetSerializer, ProfileSerializer
+from .email_utils import send_verification_email
 
 # --- IDENTITY GATEWAY (Login) ---
 class LoginView(views.APIView):
@@ -71,7 +72,6 @@ class RegisterView(views.APIView):
 
         # Also prevent duplicate pending registrations by email or username
         if PendingRegistration.objects.filter(email=email).exists() or PendingRegistration.objects.filter(username=username).exists():
-            # Inform the client that a pending registration exists so it can route to verification
             return Response({"error": "Pending registration exists.", "email": email}, status=409)
 
         try:
@@ -104,19 +104,11 @@ class RegisterView(views.APIView):
                 text_message = render_to_string('emails/verification.txt', ctx)
 
                 try:
-                    msg = EmailMultiAlternatives(
-                        subject="Verify Your Digital Legacy Account",
-                        body=text_message,
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        to=[pending.email],
-                        headers={
-                            'Reply-To': settings.DEFAULT_FROM_EMAIL,
-                            'X-Mailer': 'Digital Legacy',
-                            'X-Priority': '3'
-                        }
+                    send_verification_email(
+                        to_email=pending.email,
+                        html_content=html_message,
+                        text_content=text_message
                     )
-                    msg.attach_alternative(html_message, "text/html")
-                    msg.send(fail_silently=False)
                     print(f"[EMAIL SENT] Verification email sent to {pending.email}")
                 except Exception as email_error:
                     # Log the email error but do not roll back the pending registration.
@@ -201,15 +193,12 @@ class ResendVerificationView(views.APIView):
                 }
                 html_message = render_to_string('emails/verification.html', ctx)
                 text_message = render_to_string('emails/verification.txt', ctx)
-                msg = EmailMultiAlternatives(
-                    subject=f"Your new Digital Legacy verification code — {new_code}",
-                    body=text_message,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    to=[pending.email],
-                    headers={'Reply-To': settings.DEFAULT_FROM_EMAIL}
+                send_verification_email(
+                    to_email=pending.email,
+                    html_content=html_message,
+                    text_content=text_message,
+                    subject=f"Your new Digital Legacy verification code — {new_code}"
                 )
-                msg.attach_alternative(html_message, "text/html")
-                msg.send(fail_silently=False)
             except Exception as e:
                 print(f"[EMAIL ERROR] resend failed for {pending.email}: {e}")
                 return Response({"error": "Failed to send verification email."}, status=500)
