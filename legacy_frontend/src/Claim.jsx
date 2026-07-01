@@ -79,7 +79,7 @@ function Claim() {
 
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}>
-          <Shield size={48} color={T.primary} fill={`${T.primary}22`} style={{ marginBottom: '12px' }} />
+          <Shield size={48} color={T.primary} fill="var(--primary-bg)" style={{ marginBottom: '12px' }} />
         </motion.div>
         <h1 style={{ fontWeight: 900, fontSize: '28px', margin: 0 }}>{step === 1 ? 'Legacy Access' : 'Trustee Portal'}</h1>
         <p style={{ color: T.subText, marginTop: '6px' }}>Authorized Digital Recovery</p>
