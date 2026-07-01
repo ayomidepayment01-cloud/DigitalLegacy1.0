@@ -23,6 +23,7 @@ const AlertTriangle = _normIcon(Icons.AlertTriangle);
 const CheckCircle = _normIcon(Icons.CheckCircle);
 const Clock = _normIcon(Icons.Clock);
 const LinkIcon = _normIcon(Icons.Link);
+const UserIcon = _normIcon(Icons.User);
 const Key = _normIcon(Icons.Key);
 const Info = _normIcon(Icons.Info);
 const Pencil = _normIcon(Icons.Pencil);
@@ -875,6 +876,40 @@ function Dashboard() {
                 >
                   Save System Configuration
                 </motion.button>
+
+                <hr style={{margin: '32px 0', borderColor: T.border, opacity: 0.3}} />
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  style={{ marginBottom: '32px', padding: '24px', borderRadius: '16px', background: T.bg, border: `1px solid ${T.border}` }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                    <UserIcon size={20} color={T.primary} />
+                    <span style={{ fontWeight: '800', fontSize: '14px', color: T.text }}>Personal Profile</span>
+                  </div>
+                  <p style={{ fontSize: '12px', color: T.subText, marginBottom: '16px' }}>
+                    Manage your personal information, update your password, or change your profile picture.
+                  </p>
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => navigate('/profile')} 
+                    style={{ 
+                      padding: '10px 20px', 
+                      borderRadius: '10px', 
+                      border: `1px solid ${T.primary}`, 
+                      color: T.primary, 
+                      background: 'transparent', 
+                      cursor: 'pointer', 
+                      fontWeight: '700',
+                      fontSize: '14px',
+                      transition: '0.2s'
+                    }}
+                  >
+                    Go to Profile
+                  </motion.button>
+                </motion.div>
 
                 <hr style={{margin: '32px 0', borderColor: T.border, opacity: 0.3}} />
 
