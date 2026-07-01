@@ -87,6 +87,7 @@ function Dashboard() {
   const [twoFactorData, setTwoFactorData] = useState(null);
   const [twoFactorCode, setTwoFactorCode] = useState('');
   const [showMasterKey, setShowMasterKey] = useState(false);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
 
   useEffect(() => {
     document.body.style.backgroundColor = T.bg;
@@ -140,8 +141,8 @@ function Dashboard() {
     } catch (err) { if (err.response?.status === 401) navigate('/login'); }
   };
 
-  const triggerDemo = async () => {
-    if (!window.confirm('This simulates 97 days of inactivity and releases your vault. Continue?')) return;
+  const executeDemo = async () => {
+    setIsDemoModalOpen(false);
     const loadToast = toast.loading('Simulating inactivity...');
     try {
       await api.post('test-trigger/');
@@ -184,6 +185,17 @@ function Dashboard() {
       fetchMe();
     } catch (err) {
       toast.error("Invalid code. Please try again.", { id: loadToast });
+    }
+  };
+
+  const handleDisable2FA = async () => {
+    if (!window.confirm("Are you sure you want to disable 2FA? This will make your account less secure.")) return;
+    try {
+      await api.post('disable-2fa/');
+      toast.success('2FA disabled successfully');
+      fetchMe();
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Failed to disable 2FA');
     }
   };
 
@@ -350,9 +362,9 @@ function Dashboard() {
           style={{...logoStyle, borderBottom: `1px solid ${T.border}`}}
         >
           <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}>
-            <Shield size={24} color={T.primary} fill={`${T.primary}22`} />
+            <Shield size={24} color={T.primary} fill="var(--primary-bg)" />
           </motion.div>
-          <span style={{ fontWeight: '800', fontSize: '18px', color: T.text }}>Digital Legacy</span>
+          <span style={{ fontWeight: '800', fontSize: '18px', color: 'var(--primary)' }}>Digital Legacy</span>
         </motion.div>
 
         <motion.div 
@@ -430,7 +442,7 @@ function Dashboard() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleLogout} 
-            style={{...logoutBtnStyle, border: `1px solid ${T.border}`, color: T.subText}}
+            style={logoutBtnStyle}
           >
             <LogOut size={14} />
             <span style={{ marginLeft: '8px' }}>Sign out</span>
@@ -578,16 +590,16 @@ function Dashboard() {
                 style={{...demoBoxStyle, background: `${T.primary}05`, border: `1px dashed ${T.primary}33`}}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <AlertTriangle size={16} color="#f59e0b" />
-                  <span style={{ fontSize: '12px', color: '#f59e0b', fontWeight: '800' }}>EXAMINER DEMO TOOL</span>
+                  <AlertTriangle size={16} color="var(--danger)" />
+                  <span style={{ fontSize: '11px', color: 'var(--danger)', fontWeight: '800' }}>EMERGENCY OVERRIDE</span>
                 </div>
                 <motion.button 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={triggerDemo} 
-                  style={{...demoBtnStyle, borderColor: '#f59e0b', color: '#f59e0b'}}
+                  onClick={() => setIsDemoModalOpen(true)} 
+                  style={{ background: 'var(--danger)', border: 'none', color: '#fff', padding: '6px 12px', fontSize: '10px', fontWeight: '800', textTransform: 'uppercase', cursor: 'pointer', borderRadius: '6px', boxShadow: '0 5px 15px -5px var(--danger)' }}
                 >
-                  Simulate Inactivity
+                  Critical Dispersal
                 </motion.button>
               </motion.div>
             </motion.div>
@@ -786,18 +798,48 @@ function Dashboard() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={initiate2FA} 
-                      style={{ ...demoBtnStyle, borderColor: T.primary, color: T.primary }}
+                      style={{ 
+                        padding: '10px 20px', 
+                        borderRadius: '10px', 
+                        border: 'none', 
+                        color: '#fff', 
+                        background: '#10b981', 
+                        cursor: 'pointer', 
+                        fontWeight: '700',
+                        fontSize: '14px',
+                        transition: '0.2s'
+                      }}
                     >
                       Enable Authenticator
                     </motion.button>
                   ) : (
-                    <motion.div 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#10b981', fontWeight: '800', fontSize: '12px' }}
-                    >
-                      <CheckCircle size={14} /> 2FA PROTECTION ACTIVE
-                    </motion.div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#10b981', fontWeight: '800', fontSize: '12px' }}
+                      >
+                        <CheckCircle size={14} /> 2FA PROTECTION ACTIVE
+                      </motion.div>
+                      <motion.button 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleDisable2FA} 
+                        style={{ 
+                          padding: '8px 16px', 
+                          borderRadius: '8px', 
+                          border: '1px solid var(--danger)', 
+                          color: 'var(--danger)', 
+                          background: 'transparent', 
+                          cursor: 'pointer', 
+                          fontWeight: '700',
+                          fontSize: '12px',
+                          transition: '0.2s'
+                        }}
+                      >
+                        Disable 2FA
+                      </motion.button>
+                    </div>
                   )}
                 </motion.div>
 
@@ -1015,7 +1057,7 @@ function Dashboard() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={confirm2FA} 
-                  style={{ ...modalBtnStyle, background: T.primary, color: '#fff', border: 'none' }}
+                  style={{ ...modalBtnStyle, background: '#10b981', color: '#fff', border: 'none' }}
                 >
                   Activate 2FA
                 </motion.button>
@@ -1069,6 +1111,47 @@ function Dashboard() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* DEMO CONFIRMATION MODAL */}
+      <AnimatePresence>
+        {isDemoModalOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={modalOverlayStyle}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              style={{ ...modalContentStyle, background: 'var(--glass-bg)' }}
+            >
+              <AlertTriangle size={48} color="var(--danger)" />
+              <h3 style={{ color: T.text, marginTop: '16px' }}>Are You Sure?</h3>
+              <p style={{ color: T.subText, fontSize: '14px', marginBottom: '24px', textAlign: 'center' }}>
+                This simulates 97 days of inactivity and will immediately release your vault to your trustees. This action is irreversible.
+              </p>
+              
+              <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                <button 
+                  onClick={() => setIsDemoModalOpen(false)}
+                  style={{ ...modalBtnStyle, background: 'transparent', border: `1px solid ${T.border}`, color: T.text }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={executeDemo}
+                  style={{ ...modalBtnStyle, background: 'var(--danger)', color: '#fff', border: 'none' }}
+                >
+                  Yes, Disperse Vault
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }
@@ -1080,20 +1163,20 @@ const userCardStyle = { display: 'flex', alignItems: 'center', gap: '12px', padd
 const avatarStyle = { width: '40px', height: '40px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', fontWeight: '800', flexShrink: 0 };
 const avatarSmallStyle = { width: '36px', height: '36px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', flexShrink: 0 };
 const navItemStyle = { display: 'flex', alignItems: 'center', width: '100%', padding: '14px 24px', fontSize: '13px', border: 'none', cursor: 'pointer', textAlign: 'left', fontWeight: '600' };
-const logoutBtnStyle = { display: 'flex', alignItems: 'center', width: '100%', padding: '12px', background: 'none', borderRadius: '8px', fontSize: '12px', cursor: 'pointer', fontWeight: '700', textTransform: 'uppercase' };
+const logoutBtnStyle = { display: 'flex', alignItems: 'center', width: '100%', padding: '12px', background: 'var(--danger-bg)', borderRadius: '8px', fontSize: '12px', cursor: 'pointer', fontWeight: '700', textTransform: 'uppercase', color: 'var(--danger)', border: '1px solid var(--danger)' };
 const mainStyle = { flex: 1, overflowY: 'auto', boxSizing: 'border-box' };
 const pageTitleStyle = { fontSize: '32px', fontWeight: '800', marginBottom: '32px', letterSpacing: '-0.02em' };
-const statusCardStyle = { borderRadius: '24px', padding: '40px', marginBottom: '32px' };
-const statsRowStyle = { display: 'grid', marginBottom: '32px' };
-const statCardStyle = { padding: '24px' };
-const heartbeatBtnStyle = { padding: '16px 32px', borderRadius: '16px', fontSize: '14px', fontWeight: '800', cursor: 'pointer' };
-const demoBoxStyle = { padding: '24px', borderRadius: '16px' };
-const demoBtnStyle = { background: 'none', border: '1px solid', padding: '10px 20px', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', cursor: 'pointer', borderRadius: '8px' };
-const formCardStyle = { padding: '32px', marginBottom: '32px', borderRadius: '24px' };
-const formGridStyle = { display: 'grid', gap: '15px' };
-const inputStyle = { padding: '14px', outline: 'none', borderRadius: '12px', fontSize: '14px', width: '100%', boxSizing: 'border-box' };
-const addBtnStyle = { display: 'flex', alignItems: 'center', marginTop: '20px', padding: '14px 28px', border: 'none', fontSize: '13px', fontWeight: '800', cursor: 'pointer', borderRadius: '12px' };
-const noteItemStyle = { display: 'flex', alignItems: 'center', padding: '20px', gap: '12px' };
+const statusCardStyle = { borderRadius: '24px', padding: '40px', marginBottom: '32px', background: 'var(--glass-bg)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-premium)' };
+const statsRowStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '32px' };
+const statCardStyle = { padding: '24px', background: 'var(--glass-bg)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid var(--border)', borderRadius: '20px', boxShadow: 'var(--shadow-lg)' };
+const heartbeatBtnStyle = { padding: '16px 32px', borderRadius: '16px', fontSize: '14px', fontWeight: '800', cursor: 'pointer', background: 'var(--primary)', color: '#fff', border: 'none', boxShadow: '0 10px 20px -10px var(--primary)' };
+const demoBoxStyle = { padding: '24px', borderRadius: '16px', border: '1px solid var(--border)', background: 'var(--primary-bg)' };
+const demoBtnStyle = { background: 'var(--primary)', border: 'none', color: '#fff', padding: '10px 20px', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', cursor: 'pointer', borderRadius: '8px', boxShadow: '0 5px 15px -5px var(--primary)' };
+const formCardStyle = { padding: '32px', marginBottom: '32px', borderRadius: '24px', background: 'var(--glass-bg)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-premium)' };
+const formGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '15px' };
+const inputStyle = { padding: '14px', outline: 'none', borderRadius: '12px', fontSize: '14px', width: '100%', boxSizing: 'border-box', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', transition: 'border-color 0.3s ease' };
+const addBtnStyle = { display: 'flex', alignItems: 'center', marginTop: '20px', padding: '14px 28px', border: 'none', fontSize: '13px', fontWeight: '800', cursor: 'pointer', borderRadius: '12px', background: 'var(--primary)', color: '#fff', boxShadow: '0 10px 20px -10px var(--primary)' };
+const noteItemStyle = { display: 'flex', alignItems: 'center', padding: '20px', gap: '12px', background: 'var(--glass-bg)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid var(--border)', borderRadius: '16px', boxShadow: 'var(--shadow)' };
 const deleteBtnStyle = { background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' };
 const infoRowStyle = { display: 'flex', justifyContent: 'space-between', padding: '16px 0' };
 const successAlertStyle = { display: 'flex', alignItems: 'center', fontSize: '13px', marginBottom: '20px' };
@@ -1110,13 +1193,15 @@ const modalOverlayStyle = {
 const modalContentStyle = {
   width: '100%', maxWidth: '400px', padding: '32px',
   borderRadius: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center',
-  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+  background: 'var(--glass-bg)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', border: '1px solid var(--border)',
+  boxShadow: 'var(--shadow-premium)'
 };
 
 const vaultModalContentStyle = {
   width: '100%', maxWidth: '650px', padding: '40px',
   borderRadius: '28px', display: 'flex', flexDirection: 'column',
-  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+  background: 'var(--glass-bg)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', border: '1px solid var(--border)',
+  boxShadow: 'var(--shadow-premium)'
 };
 
 const modalBtnStyle = {

@@ -19,7 +19,7 @@ function Register() {
   // Calculate password strength
   const calculatePasswordStrength = (pwd) => {
     let strength = 0;
-    if (!pwd) return { score: 0, label: '', color: T.danger || '#ef4444' };
+    if (!pwd) return { score: 0, label: '', color: 'var(--danger)' };
     
     if (pwd.length >= 8) strength++;
     if (pwd.length >= 12) strength++;
@@ -48,28 +48,20 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     
-    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match. Please try again.');
       return;
     }
 
     try {
-      // 1. Send registration request to backend
       const response = await api.post('register/', formData);
-      
-      // 2. Show success message (e.g., "Check your email for the code")
       alert(response.data.message);
-      // 3. Persist pending email and move to the verification page
       localStorage.setItem('pendingEmail', formData.email);
       navigate('/verify', { state: { email: formData.email } });
-      
     } catch (err) {
-      // 4. Show the specific error (503 Timeout, 400 Duplicate, etc.)
       const status = err.response?.status;
       const errorData = err.response?.data || {};
 
-      // If backend signals a pending registration, route user to verification page
       if (status === 409 && errorData.email) {
         alert("A pending registration exists. Please check your email for the verification code.");
         navigate('/verify', { state: { email: errorData.email } });
@@ -82,32 +74,34 @@ function Register() {
   };
 
   return (
-    <div style={{...rootStyle, background: T.bg, color: T.text}}>
+    <div style={{...rootStyle}}>
+      <div className="ambient-glow" style={{ top: '10%', left: '30%', width: '800px', height: '800px' }}></div>
       <style>{`
-        * { transition: background 0.4s ease, color 0.4s ease, border 0.4s ease; }
-        input::placeholder { color: ${T.subText}; opacity: 0.5; }
+        input::placeholder { color: var(--sub-text); opacity: 0.5; }
+        .ambient-glow {
+          position: absolute;
+          background: radial-gradient(circle, var(--primary-bg) 0%, transparent 60%);
+          z-index: -1;
+          pointer-events: none;
+        }
       `}</style>
 
-      <div style={{
-        ...cardStyle, 
-        background: T.card, 
-        border: `1px solid ${T.border}`, 
-        boxShadow: T.isDark ? 'none' : '0 10px 25px -5px rgba(0,0,0,0.05)'
-      }}>
+      <div className="glass-panel animate-in" style={cardStyle}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <Shield size={40} color={T.primary} style={{ marginBottom: '16px' }} />
-          <h2 style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-0.02em' }}>Create Vault</h2>
-          <p style={{ color: T.subText, fontSize: '14px' }}>Start your digital legacy today</p>
+          <Shield size={40} color="var(--primary)" style={{ marginBottom: '16px' }} />
+          <h2 style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-0.02em', color: 'var(--text-h)' }}>Create Vault</h2>
+          <p style={{ color: 'var(--sub-text)', fontSize: '14px' }}>Start your digital legacy today</p>
         </div>
 
         <form onSubmit={handleRegister}>
           <div style={inputGroup}>
-            <label style={{...labelStyle, color: T.subText}}>Username</label>
+            <label style={{...labelStyle, color: 'var(--sub-text)'}}>Username</label>
             <div style={{ position: 'relative' }}>
-              <User size={18} style={{...iconStyle, color: T.subText}} />
+              <User size={18} style={{...iconStyle, color: 'var(--sub-text)'}} />
               <input 
                 type="text" 
-                style={{...inputStyle, background: T.bg, border: `1px solid ${T.border}`, color: T.text}} 
+                className="input-premium"
+                style={inputStyle} 
                 placeholder="Choose a username"
                 value={formData.username}
                 onChange={(e) => setFormData({...formData, username: e.target.value})}
@@ -117,12 +111,13 @@ function Register() {
           </div>
 
           <div style={inputGroup}>
-            <label style={{...labelStyle, color: T.subText}}>Email Address</label>
+            <label style={{...labelStyle, color: 'var(--sub-text)'}}>Email Address</label>
             <div style={{ position: 'relative' }}>
-              <Mail size={18} style={{...iconStyle, color: T.subText}} />
+              <Mail size={18} style={{...iconStyle, color: 'var(--sub-text)'}} />
               <input 
                 type="email" 
-                style={{...inputStyle, background: T.bg, border: `1px solid ${T.border}`, color: T.text}} 
+                className="input-premium"
+                style={inputStyle} 
                 placeholder="yourname@example.com"
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -132,12 +127,13 @@ function Register() {
           </div>
 
           <div style={inputGroup}>
-            <label style={{...labelStyle, color: T.subText}}>Master Key (Password)</label>
+            <label style={{...labelStyle, color: 'var(--sub-text)'}}>Master Key (Password)</label>
             <div style={{ position: 'relative' }}>
-              <Lock size={18} style={{...iconStyle, color: T.subText}} />
+              <Lock size={18} style={{...iconStyle, color: 'var(--sub-text)'}} />
               <input 
                 type={showPassword ? "text" : "password"} 
-                style={{...inputStyle, background: T.bg, border: `1px solid ${T.border}`, color: T.text, paddingRight: '40px'}} 
+                className="input-premium"
+                style={{...inputStyle, paddingRight: '40px'}} 
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
@@ -161,8 +157,8 @@ function Register() {
                 }}
               >
                 {showPassword ? 
-                  <EyeOff size={18} color={T.subText} /> : 
-                  <Eye size={18} color={T.subText} />
+                  <EyeOff size={18} color="var(--sub-text)" /> : 
+                  <Eye size={18} color="var(--sub-text)" />
                 }
               </button>
             </div>
@@ -171,23 +167,19 @@ function Register() {
             {formData.password && (
               <div style={{ marginTop: '12px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '12px', color: T.subText, fontWeight: '600' }}>Password Strength</span>
+                  <span style={{ fontSize: '12px', color: 'var(--sub-text)', fontWeight: '600' }}>Password Strength</span>
                   <span style={{ fontSize: '12px', color: passwordStrength.color, fontWeight: '700' }}>
                     {passwordStrength.label}
                   </span>
                 </div>
-                <div style={{ 
-                  display: 'flex', 
-                  gap: '4px', 
-                  height: '4px'
-                }}>
+                <div style={{ display: 'flex', gap: '4px', height: '4px' }}>
                   {[0, 1, 2, 3, 4, 5].map((i) => (
                     <div
                       key={i}
                       style={{
                         flex: 1,
                         borderRadius: '2px',
-                        background: i < passwordStrength.score ? passwordStrength.color : '#e5e7eb',
+                        background: i < passwordStrength.score ? passwordStrength.color : 'var(--border)',
                         transition: 'background 0.3s ease'
                       }}
                     />
@@ -195,7 +187,7 @@ function Register() {
                 </div>
                 <ul style={{
                   fontSize: '11px',
-                  color: T.subText,
+                  color: 'var(--sub-text)',
                   marginTop: '8px',
                   paddingLeft: '16px',
                   margin: '8px 0 0 0'
@@ -210,20 +202,17 @@ function Register() {
           </div>
 
           <div style={inputGroup}>
-            <label style={{...labelStyle, color: T.subText}}>Confirm Master Key</label>
+            <label style={{...labelStyle, color: 'var(--sub-text)'}}>Confirm Master Key</label>
             <div style={{ position: 'relative' }}>
-              <Lock size={18} style={{...iconStyle, color: T.subText}} />
+              <Lock size={18} style={{...iconStyle, color: 'var(--sub-text)'}} />
               <input 
                 type={showConfirm ? "text" : "password"} 
+                className="input-premium"
                 style={{
                   ...inputStyle, 
-                  background: T.bg, 
-                  border: `2px solid ${
-                    passwordsMatch ? '#10b981' : 
-                    passwordsMatchError ? '#ef4444' : 
-                    T.border
-                  }`, 
-                  color: T.text,
+                  border: passwordsMatch ? '2px solid #10b981' : 
+                          passwordsMatchError ? '2px solid var(--danger)' : 
+                          '1px solid var(--border)', 
                   paddingRight: '40px'
                 }} 
                 placeholder="••••••••"
@@ -249,8 +238,8 @@ function Register() {
                 }}
               >
                 {showConfirm ? 
-                  <EyeOff size={18} color={T.subText} /> : 
-                  <Eye size={18} color={T.subText} />
+                  <EyeOff size={18} color="var(--sub-text)" /> : 
+                  <Eye size={18} color="var(--sub-text)" />
                 }
               </button>
             </div>
@@ -260,7 +249,7 @@ function Register() {
               <div style={{
                 marginTop: '8px',
                 fontSize: '12px',
-                color: passwordsMatch ? '#10b981' : '#ef4444',
+                color: passwordsMatch ? '#10b981' : 'var(--danger)',
                 fontWeight: '600',
                 display: 'flex',
                 alignItems: 'center',
@@ -274,20 +263,21 @@ function Register() {
           <button 
             type="submit" 
             disabled={!passwordsMatch}
+            className="btn-primary"
             style={{
               ...btnStyle, 
-              background: passwordsMatch ? T.primary : '#d1d5db',
+              background: passwordsMatch ? 'var(--primary)' : 'var(--sub-text)',
               opacity: passwordsMatch ? 1 : 0.6,
               cursor: passwordsMatch ? 'pointer' : 'not-allowed',
-              transition: 'all 0.3s ease'
+              marginTop: '24px'
             }}
           >
             Initialize Vault <ChevronRight size={18} />
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: '24px', fontSize: '14px', color: T.subText }}>
-          Already have a vault? <span onClick={() => navigate('/login')} style={{ color: T.primary, cursor: 'pointer', fontWeight: '700' }}>Sign in</span>
+        <p style={{ textAlign: 'center', marginTop: '32px', fontSize: '14px', color: 'var(--sub-text)' }}>
+          Already have a vault? <span onClick={() => navigate('/login')} style={{ color: 'var(--primary)', cursor: 'pointer', fontWeight: '700' }}>Sign in</span>
         </p>
       </div>
     </div>
@@ -295,12 +285,12 @@ function Register() {
 }
 
 // ── STYLES ──
-const rootStyle = { height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' };
-const cardStyle = { width: '100%', maxWidth: '400px', padding: '40px', borderRadius: '24px', transition: '0.4s', maxHeight: '90vh', overflowY: 'auto' };
+const rootStyle = { height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' };
+const cardStyle = { width: '100%', maxWidth: '440px', padding: 'clamp(24px, 6vw, 48px)', margin: '20px', borderRadius: '28px', display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'var(--glass-bg)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-premium)', boxSizing: 'border-box', maxHeight: '95vh', overflowY: 'auto' };
 const inputGroup = { marginBottom: '20px' };
 const labelStyle = { display: 'block', fontSize: '12px', fontWeight: '700', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.05em' };
-const inputStyle = { width: '100%', padding: '12px 12px 12px 40px', borderRadius: '12px', outline: 'none', boxSizing: 'border-box', fontSize: '14px' };
-const iconStyle = { position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' };
-const btnStyle = { width: '100%', padding: '14px', borderRadius: '12px', border: 'none', color: 'white', fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', marginTop: '10px', fontSize: '15px' };
+const inputStyle = { width: '100%', padding: '14px 14px 14px 44px', borderRadius: '12px', outline: 'none', boxSizing: 'border-box', fontSize: '15px' };
+const iconStyle = { position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' };
+const btnStyle = { width: '100%', padding: '16px', borderRadius: '12px', border: 'none', color: 'white', fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', fontSize: '16px', transition: 'all 0.3s ease' };
 
 export default Register;

@@ -39,23 +39,23 @@ function Enable2FA() {
   const qrSrc = uri ? `https://chart.googleapis.com/chart?cht=qr&chs=260x260&chl=${encodeURIComponent(uri)}` : null;
 
   return (
-    <div style={{ display:'flex', alignItems:'center', justifyContent:'center', minHeight:'100vh', background: T.bg, color: T.text }}>
-      <div style={{ width:360, padding:28, borderRadius:16, background: T.card, border: `1px solid ${T.border}`, textAlign:'center' }}>
-        <h2 style={{ marginBottom:8 }}>Enable Two-Factor Authentication</h2>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: T.bg, color: T.text }}>
+      <div className="glass-panel" style={{ width: 360, padding: 32, textAlign: 'center', margin: 'auto' }}>
+        <h2 style={{ marginBottom: 8 }}>Enable Two-Factor Authentication</h2>
         <p style={{ color: T.subText }}>Scan the QR code below with your authenticator app (Google Authenticator, Authy, etc.)</p>
 
         {loading ? (
-          <div style={{ padding:40 }}>Loading...</div>
+          <div style={{ padding: 40 }}>Loading...</div>
         ) : (
           <>
-            {qrSrc ? <img src={qrSrc} alt="2FA QR" style={{ margin:'18px 0', borderRadius:8 }} /> : <div style={{ padding:24, color:T.subText }}>QR not available</div>}
+            {qrSrc ? <img src={qrSrc} alt="2FA QR" style={{ margin: '18px 0', borderRadius: 8 }} /> : <div style={{ padding: 24, color: T.subText }}>QR not available</div>}
 
-            <div style={{ marginTop:8, fontSize:13, color:T.subText }}>Secret</div>
-            <div style={{ marginTop:6, fontWeight:700, letterSpacing:3 }}>{secret || '—'}</div>
+            <div style={{ marginTop: 8, fontSize: 13, color: T.subText }}>Secret</div>
+            <div style={{ marginTop: 6, fontWeight: 700, letterSpacing: 3 }}>{secret || '—'}</div>
 
-            <div style={{ display:'flex', gap:10, marginTop:18, justifyContent:'center' }}>
-              <button onClick={() => { navigator.clipboard?.writeText(secret); toast.success('Secret copied') }} style={{ padding:'10px 14px', borderRadius:10, border:'none', background:T.primary, color:'#fff', cursor:'pointer' }}>Copy</button>
-              <button onClick={handleProceed} style={{ padding:'10px 14px', borderRadius:10, border:`1px solid ${T.border}`, background:'transparent', color:T.text, cursor:'pointer' }}>Proceed</button>
+            <div style={{ display: 'flex', gap: 10, marginTop: 18, justifyContent: 'center' }}>
+              <button onClick={() => { navigator.clipboard?.writeText(secret); toast.success('Secret copied') }} style={{ padding: '10px 14px', borderRadius: 10, border: 'none', background: T.primary, color: '#fff', cursor: 'pointer' }}>Copy</button>
+              <button onClick={handleProceed} style={{ padding: '10px 14px', borderRadius: 10, border: `1px solid ${T.border}`, background: 'transparent', color: T.text, cursor: 'pointer' }}>Proceed</button>
             </div>
           </>
         )}

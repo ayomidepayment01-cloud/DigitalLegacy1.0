@@ -348,22 +348,22 @@ function Profile() {
                 Disable 2FA
               </button>
             ) : (
-              <button 
-                onClick={() => navigate('/enable-2fa')}
-                style={{ 
-                  padding: '10px 20px', 
-                  borderRadius: '10px', 
-                  border: 'none', 
-                  color: '#fff', 
-                  background: T.primary, 
-                  cursor: 'pointer', 
-                  fontWeight: '700',
-                  fontSize: '14px',
-                  transition: '0.2s'
-                }}
-              >
-                Enable 2FA
-              </button>
+                <button 
+                  onClick={() => navigate('/enable-2fa')}
+                  style={{ 
+                    padding: '10px 20px', 
+                    borderRadius: '10px', 
+                    border: 'none', 
+                    color: '#fff', 
+                    background: '#10b981', 
+                    cursor: 'pointer', 
+                    fontWeight: '700',
+                    fontSize: '14px',
+                    transition: '0.2s'
+                  }}
+                >
+                  Enable 2FA
+                </button>
             )}
           </div>
         </div>
@@ -423,9 +423,12 @@ const containerStyle = {
   width: '100%',
   maxWidth: '800px',
   borderRadius: '24px',
-  padding: '40px',
-  border: '1px solid',
-  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)',
+  padding: 'clamp(24px, 5vw, 40px)',
+  border: '1px solid var(--border)',
+  background: 'var(--glass-bg)',
+  backdropFilter: 'blur(16px)',
+  WebkitBackdropFilter: 'blur(16px)',
+  boxShadow: 'var(--shadow-premium)',
 };
 
 const headerStyle = {
@@ -447,9 +450,12 @@ const backBtnStyle = {
 const pictureSectionStyle = {
   marginBottom: '40px',
   paddingBottom: '40px',
-  borderBottom: '1px solid #e2e8f0',
+  borderBottom: '1px solid var(--border)',
   display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
   alignItems: 'center',
+  justifyContent: 'center',
   gap: '24px',
 };
 
@@ -463,7 +469,7 @@ const pictureStyle = {
   height: '120px',
   borderRadius: '50%',
   objectFit: 'cover',
-  border: '3px solid #e2e8f0',
+  border: '3px solid var(--border)',
 };
 
 const placeholderStyle = {
@@ -506,7 +512,7 @@ const deleteBtnStyle = {
 
 const infoGridStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
   gap: '20px',
   marginBottom: '32px',
 };
@@ -527,10 +533,13 @@ const labelStyle = {
 const inputStyle = {
   padding: '12px',
   borderRadius: '8px',
-  border: '1px solid #e2e8f0',
+  border: '1px solid var(--border)',
+  background: 'var(--bg)',
+  color: 'var(--text)',
   fontSize: '14px',
   fontFamily: 'inherit',
   outline: 'none',
+  transition: 'border-color 0.3s ease',
 };
 
 const actionsStyle = {

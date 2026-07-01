@@ -14,11 +14,7 @@ function Landing() {
 
   useEffect(() => {
     if (!T) return;
-    
-    document.body.style.backgroundColor = T.bg;
-    document.body.style.transition = "background-color 0.4s ease";
     setTimeout(() => setVisible(true), 100);
-    
     const interval = setInterval(() => setPulse(p => !p), 2000);
     return () => clearInterval(interval);
   }, [T]);
@@ -26,46 +22,47 @@ function Landing() {
   if (!T) return null; 
 
   return (
-    <div style={{ ...rootStyle, background: T.bg, color: T.text }}>
+    <div style={{ ...rootStyle, background: 'var(--bg)', color: 'var(--text)' }}>
       
       {/* 1. THEME-DRIVEN INTERACTIVE CSS */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        * { font-family: 'Inter', sans-serif !important; box-sizing: border-box; }
-        
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
-
         .glass-card { 
-          background: ${T.isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.7)'};
-          backdrop-filter: blur(12px); 
-          border: 1px solid ${T.border};
+          background: var(--glass-bg);
+          backdrop-filter: blur(16px); 
+          -webkit-backdrop-filter: blur(16px);
+          border: 1px solid var(--glass-border);
+          box-shadow: var(--shadow-premium);
           border-radius: 28px; 
           padding: 40px; 
-          transition: all 0.3s ease;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .glass-card:hover { transform: translateY(-8px); border-color: ${T.primary}; box-shadow: 0 20px 40px -15px ${T.primary}22; }
+        .glass-card:hover { 
+          transform: translateY(-8px); 
+          border-color: var(--primary); 
+          box-shadow: 0 20px 40px -15px var(--primary-bg); 
+        }
 
         .nav-btn {
-          background: none; border: 1px solid ${T.border}; color: ${T.text};
-          padding: 10px 24px; border-radius: 10px; font-weight: 700; cursor: pointer;
+          background: none; border: 1px solid var(--border); color: var(--text);
+          padding: 10px 24px; border-radius: 12px; font-weight: 700; cursor: pointer;
           transition: all 0.3s ease;
         }
-        .nav-btn:hover { border-color: ${T.primary}; color: ${T.primary}; background: ${T.primary}05; }
+        .nav-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-bg); }
 
         .primary-btn { 
           border: none; color: #fff; padding: 14px 32px; border-radius: 12px; 
           font-weight: 800; cursor: pointer; transition: all 0.3s ease; 
-          display: flex; align-items: center; gap: 8px; 
+          display: flex; align-items: center; gap: 8px; background: var(--primary);
         }
-        .primary-btn:hover { transform: scale(1.03); box-shadow: 0 10px 20px ${T.primary}44; }
+        .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px var(--primary); }
 
         .outline-btn {
-          background: none; border: 1px solid ${T.border}; color: ${T.text};
+          background: var(--glass-bg); border: 1px solid var(--border); color: var(--text);
           padding: 14px 32px; border-radius: 12px; font-weight: 700; cursor: pointer;
           transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
+          backdrop-filter: blur(10px);
         }
-        .outline-btn:hover { border-color: ${T.primary}; background: ${T.primary}05; transform: scale(1.03); }
+        .outline-btn:hover { border-color: var(--primary); background: var(--primary-bg); transform: translateY(-2px); }
 
         .status-dot { 
           width: 8px; height: 8px; border-radius: 50%; background: #10b981; 
@@ -73,21 +70,34 @@ function Landing() {
           box-shadow: 0 0 10px #10b981; 
           opacity: ${pulse ? 1 : 0.4}; transition: opacity 1s ease; 
         }
+
+        /* Ambient Glow Effect for Hero */
+        .ambient-glow {
+          position: absolute;
+          top: -100px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 600px;
+          height: 600px;
+          background: radial-gradient(circle, var(--primary-bg) 0%, transparent 70%);
+          z-index: -1;
+          pointer-events: none;
+        }
       `}</style>
 
       {/* NAVIGATION */}
-      <nav style={{ ...navStyle, background: T.nav, borderBottom: `1px solid ${T.border}` }}>
+      <nav style={{ ...navStyle, background: 'var(--nav)', borderBottom: `1px solid var(--border)` }}>
         <div className="content-container" style={navInner}>
           <div style={logoStyle}>
-            <Shield size={24} color={T.primary} />
-            <span style={{ fontWeight: '900', fontSize: '20px', letterSpacing: '-0.03em' }}>Digital Legacy</span>
+            <Shield size={26} color="var(--primary)" />
+            <span style={{ fontWeight: '900', fontSize: '20px', letterSpacing: '-0.03em', color: 'var(--primary)' }}>Digital Legacy</span>
           </div>
           <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
             <button onClick={() => navigate('/login')} className="nav-btn">
               Sign in
             </button>
             {!T.isMobile && (
-              <button onClick={() => navigate('/register')} className="primary-btn" style={{ background: T.primary }}>
+              <button onClick={() => navigate('/register')} className="primary-btn">
                 Get Started
               </button>
             )}
@@ -97,15 +107,16 @@ function Landing() {
 
       {/* HERO SECTION */}
       <header style={heroSection}>
-        <div className="content-container animate-in" style={{ animationDelay: '0.2s' }}>
-          <div style={{ ...tagStyle, color: T.primary, background: `${T.primary}10`, borderColor: `${T.primary}20` }}>
+        <div className="ambient-glow"></div>
+        <div className="content-container animate-in" style={{ animationDelay: '0.2s', position: 'relative' }}>
+          <div style={{ ...tagStyle, color: 'var(--primary)', background: 'var(--primary-bg)', borderColor: 'var(--primary-bg)' }}>
             <span className="status-dot" /> System Active · 256-bit AES Protection
           </div>
           <h1 style={h1Style}>
             Because your digital life <br />
-            <span style={{ color: T.primary }}>is meant to last.</span>
+            <span style={{ color: 'var(--primary)' }}>is meant to last.</span>
           </h1>
-          <p style={{ ...heroSub, color: T.subText }}>
+          <p style={{ ...heroSub, color: 'var(--sub-text)' }}>
             Digital Legacy 1.0 is an autonomous safety net. We protect your credentials and 
             private messages, ensuring they reach the people you love—only when 
             you can no longer deliver them yourself.
@@ -113,7 +124,7 @@ function Landing() {
           
           {/* THE BUTTONS */}
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={() => navigate('/register')} className="primary-btn" style={{ background: T.primary, padding: '18px 40px', fontSize: '16px' }}>
+            <button onClick={() => navigate('/register')} className="primary-btn" style={{ padding: '18px 40px', fontSize: '16px' }}>
               Create Your Vault <ChevronRight size={20} />
             </button>
             <button onClick={() => navigate('/dashboard')} className="outline-btn" style={{ padding: '18px 40px', fontSize: '16px' }}>
@@ -124,7 +135,7 @@ function Landing() {
       </header>
 
       {/* STORY SECTION */}
-      <section style={{ padding: '100px 0' }}>
+      <section style={{ padding: '100px 0', position: 'relative' }}>
         <div className="content-container">
           <div style={storyGrid}>
             <div className="animate-in" style={{ animationDelay: '0.4s' }}>
@@ -142,10 +153,11 @@ function Landing() {
               </p>
             </div>
             <div className="animate-in" style={{ ...visualContainer, animationDelay: '0.6s' }}>
-              <div className="glass-card" style={{ textAlign: 'center', width: '100%' }}>
-                <Key size={48} color={T.primary} style={{ marginBottom: '20px' }} />
-                <h4 style={{ margin: '0 0 10px 0', fontSize: '18px' }}>Privacy is the Default</h4>
-                <p style={{ fontSize: '14px', color: T.subText, lineHeight: '1.6' }}>
+              <div className="glass-card" style={{ textAlign: 'center', width: '100%', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: '-50px', right: '-50px', width: '150px', height: '150px', background: 'var(--primary-bg)', borderRadius: '50%', filter: 'blur(40px)' }}></div>
+                <Key size={48} color="var(--primary)" style={{ marginBottom: '24px', position: 'relative' }} />
+                <h4 style={{ margin: '0 0 12px 0', fontSize: '20px', position: 'relative' }}>Privacy is the Default</h4>
+                <p style={{ fontSize: '15px', color: 'var(--sub-text)', lineHeight: '1.6', position: 'relative' }}>
                   Encryption happens on your device. We can't see your data, and neither 
                   can our servers. Your legacy remains truly yours until the moment it's released.
                 </p>
@@ -156,21 +168,21 @@ function Landing() {
       </section>
 
       {/* PILLARS SECTION */}
-      <section style={{ padding: '100px 0', background: T.card }}>
+      <section style={{ padding: '120px 0', background: 'var(--card)', borderTop: '1px solid var(--border)' }}>
         <div className="content-container">
           <p style={{ ...sectionLabel, textAlign: 'center' }}>Technical Pillars</p>
           <h2 style={{ ...sectionTitle, textAlign: 'center', marginBottom: '60px' }}>Security Without Compromise</h2>
           <div style={featureGrid}>
             {[
-              { icon: <Lock size={24} />, title: 'Advanced Vault', desc: 'Securely store credentials and notes in an isolated, encrypted environment.' },
-              { icon: <Activity size={24} />, title: 'Pulse Monitor', desc: 'A 97-day check-in system that ensures you are still in control of your legacy.' },
-              { icon: <Users size={24} />, title: 'Trustee Handover', desc: 'Define exactly who gets access to what. You maintain total granular control.' },
-              { icon: <EyeOff size={24} />, title: 'No Tracking', desc: 'Zero trackers, zero ads. A final year project built with a focus on pure user security.' }
+              { icon: <Lock size={28} />, title: 'Advanced Vault', desc: 'Securely store credentials and notes in an isolated, encrypted environment.' },
+              { icon: <Activity size={28} />, title: 'Pulse Monitor', desc: 'A 97-day check-in system that ensures you are still in control of your legacy.' },
+              { icon: <Users size={28} />, title: 'Trustee Handover', desc: 'Define exactly who gets access to what. You maintain total granular control.' },
+              { icon: <EyeOff size={28} />, title: 'No Tracking', desc: 'Zero trackers, zero ads. A final year project built with a focus on pure user security.' }
             ].map((f, i) => (
-              <div key={i} className="glass-card">
-                <div style={{ color: T.primary, marginBottom: '20px' }}>{f.icon}</div>
+              <div key={i} className="glass-card" style={{ padding: '32px' }}>
+                <div style={{ color: 'var(--primary)', marginBottom: '24px', background: 'var(--primary-bg)', display: 'inline-flex', padding: '12px', borderRadius: '16px' }}>{f.icon}</div>
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '12px' }}>{f.title}</h3>
-                <p style={{ fontSize: '14px', color: T.subText, lineHeight: '1.6' }}>{f.desc}</p>
+                <p style={{ fontSize: '14px', color: 'var(--sub-text)', lineHeight: '1.7' }}>{f.desc}</p>
               </div>
             ))}
           </div>
@@ -178,12 +190,12 @@ function Landing() {
       </section>
 
       {/* FOOTER */}
-      <footer style={{ padding: '80px 0', borderTop: `1px solid ${T.border}`, textAlign: 'center' }}>
+      <footer style={{ padding: '80px 0', borderTop: `1px solid var(--border)`, textAlign: 'center', background: 'var(--bg)' }}>
         <div className="content-container">
-          <p style={{ fontSize: '12px', color: T.subText, fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          <p style={{ fontSize: '12px', color: 'var(--sub-text)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
             Adewusi Ayomide Oluwasegun · Computer Science · LASU · 2026
           </p>
-          <p style={{ fontSize: '12px', color: T.subText, marginTop: '10px' }}>
+          <p style={{ fontSize: '12px', color: 'var(--sub-text)', marginTop: '10px' }}>
             Project Supervisor: Mrs. Omoyemi Olabisi Orioke
           </p>
         </div>
@@ -193,19 +205,19 @@ function Landing() {
 }
 
 // ── STYLE CONSTANTS (PROPERLY DEFINED) ──
-const rootStyle = { width: '100%', minHeight: '100vh', display: 'block', overflowX: 'hidden' };
-const navStyle = { padding: '12px 0', position: 'sticky', top: 0, zIndex: 1000, backdropFilter: 'blur(12px)' };
+const rootStyle = { width: '100%', minHeight: '100vh', display: 'block', overflowX: 'hidden', position: 'relative' };
+const navStyle = { padding: '16px 0', position: 'sticky', top: 0, zIndex: 1000, backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' };
 const navInner = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' };
 const logoStyle = { display: 'flex', alignItems: 'center', gap: '10px' };
-const heroSection = { padding: '120px 0 80px', textAlign: 'center' };
-const tagStyle = { display: 'inline-flex', alignItems: 'center', padding: '8px 20px', borderRadius: '30px', fontSize: '12px', fontWeight: '800', marginBottom: '32px', border: '1px solid' };
-const h1Style = { fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: '900', lineHeight: '1.05', letterSpacing: '-0.04em', marginBottom: '24px' };
-const heroSub = { fontSize: '18px', maxWidth: '750px', margin: '0 auto 48px', lineHeight: '1.7' };
-const storyGrid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '60px', alignItems: 'center' };
-const sectionLabel = { fontSize: '13px', fontWeight: '900', textTransform: 'uppercase', color: '#2563eb', letterSpacing: '0.15em', marginBottom: '16px' };
-const sectionTitle = { fontSize: '36px', fontWeight: '800', marginBottom: '24px', letterSpacing: '-0.02em' };
-const naturalBodyText = { fontSize: '17px', lineHeight: '1.8', color: '#64748b', marginBottom: '24px' };
+const heroSection = { padding: 'clamp(80px, 10vw, 140px) 0 clamp(60px, 8vw, 100px)', textAlign: 'center', position: 'relative' };
+const tagStyle = { display: 'inline-flex', alignItems: 'center', padding: '8px 24px', borderRadius: '30px', fontSize: '13px', fontWeight: '800', marginBottom: '32px', border: '1px solid' };
+const h1Style = { fontSize: 'clamp(2rem, 8vw, 5rem)', fontWeight: '900', lineHeight: '1.05', letterSpacing: '-0.04em', marginBottom: '24px' };
+const heroSub = { fontSize: 'clamp(16px, 4vw, 19px)', maxWidth: '700px', margin: '0 auto 48px', lineHeight: '1.7' };
+const storyGrid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(40px, 5vw, 80px)', alignItems: 'center' };
+const sectionLabel = { fontSize: '13px', fontWeight: '900', textTransform: 'uppercase', color: 'var(--primary)', letterSpacing: '0.15em', marginBottom: '16px' };
+const sectionTitle = { fontSize: '40px', fontWeight: '800', marginBottom: '24px', letterSpacing: '-0.02em' };
+const naturalBodyText = { fontSize: '17px', lineHeight: '1.8', color: 'var(--sub-text)', marginBottom: '24px' };
 const visualContainer = { display: 'flex', justifyContent: 'center' };
-const featureGrid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '30px' };
+const featureGrid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' };
 
 export default Landing;

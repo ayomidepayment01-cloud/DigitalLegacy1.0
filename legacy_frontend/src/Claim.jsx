@@ -224,12 +224,12 @@ function Claim() {
 const copyBtnStyle = { background: 'none', border: '1px solid', padding: 8, borderRadius: 8, cursor: 'pointer' };
 const miniInputStyle = { width: '100%', padding: '10px 35px 10px 35px', borderRadius: '8px', border: '1px solid', fontSize: '13px', outline: 'none', boxSizing: 'border-box' };
 const containerStyle = { maxWidth: '760px', margin: '0 auto', padding: '40px 20px' };
-const cardStyle = { padding: '20px', borderRadius: '16px', boxShadow: '0 6px 30px rgba(0,0,0,0.03)' };
+const cardStyle = { padding: 'clamp(24px, 5vw, 32px)', borderRadius: '24px', background: 'var(--glass-bg)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-premium)' };
 const labelStyle = { display: 'block', fontSize: '11px', fontWeight: '800', marginBottom: '8px', textTransform: 'uppercase', opacity: 0.6 };
-const inputStyle = { width: '100%', padding: '12px 12px 12px 42px', borderRadius: '10px', border: '1px solid', outline: 'none', fontSize: '14px', boxSizing: 'border-box' };
+const inputStyle = { width: '100%', padding: '14px 14px 14px 42px', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', outline: 'none', fontSize: '14px', boxSizing: 'border-box', transition: 'border-color 0.3s ease' };
 const iconStyle = { position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)' };
-const btnStyle = { width: '100%', padding: '12px', border: 'none', borderRadius: '10px', color: '#fff', fontWeight: '800', fontSize: '14px', cursor: 'pointer', marginTop: '10px' };
-const noteCard = { padding: '18px', borderRadius: '14px' };
-const decryptedBox = { padding: '12px', borderRadius: '10px', border: '1px solid', marginTop: '10px', minHeight: '54px' };
+const btnStyle = { width: '100%', padding: '14px', border: 'none', borderRadius: '12px', background: 'var(--primary)', color: '#fff', fontWeight: '800', fontSize: '14px', cursor: 'pointer', marginTop: '16px', boxShadow: '0 10px 20px -10px var(--primary)', transition: 'transform 0.2s' };
+const noteCard = { padding: 'clamp(16px, 4vw, 24px)', borderRadius: '20px', background: 'var(--glass-bg)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid var(--border)', boxShadow: 'var(--shadow)' };
+const decryptedBox = { padding: '16px', borderRadius: '12px', border: '1px solid', marginTop: '12px', minHeight: '54px' };
 
 export default Claim;

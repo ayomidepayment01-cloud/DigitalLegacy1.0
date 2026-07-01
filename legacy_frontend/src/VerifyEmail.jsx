@@ -93,9 +93,9 @@ function VerifyEmail() {
 
 // STYLES
 const containerStyle = { display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' };
-const cardStyle = { width: '100%', maxWidth: '400px', padding: '40px', borderRadius: '28px', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' };
-const iconCircle = { width: '70px', height: '70px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.03)', marginBottom: '20px' };
-const otpInput = { width: '100%', padding: '16px', fontSize: '24px', textAlign: 'center', letterSpacing: '8px', borderRadius: '16px', outline: 'none', marginBottom: '24px', fontWeight: '700' };
-const btnStyle = { width: '100%', padding: '16px', borderRadius: '16px', border: 'none', color: '#fff', fontSize: '14px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' };
+const cardStyle = { width: '100%', maxWidth: '400px', padding: '40px', borderRadius: '28px', display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'var(--glass-bg)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-premium)' };
+const iconCircle = { width: '70px', height: '70px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--primary-bg)', marginBottom: '20px' };
+const otpInput = { width: '100%', padding: '16px', fontSize: '24px', textAlign: 'center', letterSpacing: '8px', borderRadius: '16px', outline: 'none', marginBottom: '24px', fontWeight: '700', transition: 'border-color 0.3s ease' };
+const btnStyle = { width: '100%', padding: '16px', borderRadius: '16px', border: 'none', color: '#fff', fontSize: '14px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s', boxShadow: '0 10px 20px -10px var(--primary)' };
 
 export default VerifyEmail;

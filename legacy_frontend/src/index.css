@@ -2,60 +2,85 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  /* --- LIGHT THEME (White & Blue) --- */
-  --bg: #ffffff;
-  --text: #475569;         /* Slate grey for readability */
-  --text-h: #0f172a;       /* Deep navy for headings */
+  /* --- LIGHT THEME (Premium Off-White & Vibrant Blue) --- */
+  --bg: #fafafc;          
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-h: #0f172a;
+  --sub-text: #64748b;
   --border: #e2e8f0;
-  --code-bg: #f1f5f9;
   
-  /* The Primary Blue Accent */
-  --accent: #2563eb; 
-  --accent-bg: rgba(37, 99, 235, 0.1);
-  --accent-border: rgba(37, 99, 235, 0.4);
+  --primary: #3b82f6;     
+  --primary-hover: #2563eb;
+  --primary-bg: rgba(59, 130, 246, 0.1);
   
-  --shadow: rgba(0, 0, 0, 0.05) 0 10px 15px -3px, rgba(0, 0, 0, 0.03) 0 4px 6px -2px;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --danger-bg: rgba(239, 68, 68, 0.1);
+  
+  --nav: rgba(250, 250, 252, 0.85);
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --shadow-premium: 0 20px 40px -15px rgba(0,0,0,0.06);
+  --glass-border: rgba(226, 232, 240, 0.8);
+  --glass-bg: rgba(255, 255, 255, 0.6);
 
   /* Fonts: Modern Sans-Serif Stack */
   --sans: 'Inter', system-ui, -apple-system, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   font: 16px/1.6 var(--sans);
-  color-scheme: light dark;
+  color-scheme: light;
   color: var(--text);
   background: var(--bg);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* --- DARK THEME (Black/Navy & Blue) --- */
-    --bg: #0f172a;         /* Deep Navy Black */
-    --text: #94a3b8;       /* Muted slate */
-    --text-h: #f1f5f9;     /* Off-white for headings */
-    --border: #1e293b;
-    --code-bg: #1e293b;
-    
-    /* Blue stays consistent but stands out more */
-    --accent: #3b82f6; 
-    --accent-bg: rgba(59, 130, 246, 0.15);
-    
-    --shadow: rgba(0, 0, 0, 0.3) 0 10px 15px -3px;
-  }
+body.dark {
+  /* --- DARK THEME (Deep Navy / Black) --- */
+  --bg: #060813;
+  --card: #0f1322;
+  --text: #cbd5e1;
+  --text-h: #f1f5f9;
+  --sub-text: #8a9ab5;
+  --border: #1b233a;
+  
+  --primary: #3b82f6; 
+  --primary-hover: #60a5fa;
+  --primary-bg: rgba(59, 130, 246, 0.15);
+  
+  --danger: #f87171;
+  --danger-hover: #fca5a5;
+  --danger-bg: rgba(248, 113, 113, 0.15);
+  
+  --nav: rgba(6, 8, 19, 0.85);
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
+  --shadow-premium: 0 20px 40px -15px rgba(0,0,0,0.5);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(10, 10, 10, 0.6);
+  
+  color-scheme: dark;
 }
 
-/* ── THE FLUID FIX ── */
+/* ── GLOBALS ── */
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   min-height: 100%;
-  background: var(--bg); /* Infinite background color */
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 #root {
-  width: 100%;             /* Stretches to fill the browser */
+  width: 100%;
   margin: 0;
   padding: 0;
   display: flex;
@@ -63,7 +88,6 @@ html, body {
   min-height: 100vh;
 }
 
-/* Container for keeping content centered at 1126px */
 .content-container {
   width: 100%;
   max-width: 1126px;
@@ -73,41 +97,23 @@ html, body {
 }
 
 /* --- TYPOGRAPHY UPDATES --- */
-h1, h2, h3, h4 {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--sans);
   color: var(--text-h);
-  font-weight: 800;        /* Bold, heavy headings for a tech look */
-  letter-spacing: -0.03em; /* Tighter spacing for modern feel */
-}
-
-h1 {
-  font-size: clamp(32px, 8vw, 56px);
-  line-height: 1.1;
-  margin: 40px 0 24px;
-}
-
-h2 {
-  font-size: clamp(24px, 4vw, 32px);
-  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-top: 0;
+  transition: color 0.4s ease;
 }
 
 p { 
+  margin-top: 0;
   margin-bottom: 1.5rem;
   line-height: 1.7; 
 }
 
-code {
-  font-family: var(--mono);
-  font-size: 0.9em;
-  background: var(--code-bg);
-  color: var(--accent);    /* Code looks "active" in your accent blue */
-  padding: 0.2em 0.5em;
-  border-radius: 6px;
-}
-
 /* Helper for smooth transitions */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -124,13 +130,60 @@ code {
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+  background: var(--primary);
 }
 
 /* Selection highlight color */
 ::selection {
-  background: var(--accent-bg);
-  color: var(--accent);
+  background: var(--primary-bg);
+  color: var(--primary);
+}
+
+/* ── UTILITY CLASSES FOR PREMIUM UI ── */
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-premium);
+  border-radius: 24px;
+  transition: all 0.4s ease;
+}
+
+.glass-panel:hover {
+  border-color: var(--primary);
+  box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.15);
+}
+
+.input-premium {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  transition: all 0.3s ease;
+}
+
+.input-premium:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-bg);
+  outline: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #ffffff !important;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -10px var(--primary);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
 }
 
 /* Base button animations */
@@ -140,3 +193,7 @@ button {
 button:active {
   transform: scale(0.97) !important;
 }
+
+/* Animations */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.animate-in { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }

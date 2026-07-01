@@ -17,7 +17,7 @@ function Confirm2FA() {
   if (!secret) {
     return (
       <div style={{ display:'flex', alignItems:'center', justifyContent:'center', minHeight:'100vh', background: T.bg, color: T.text }}>
-        <div style={{ width:360, padding:28, borderRadius:16, background: T.card, border: `1px solid ${T.border}`, textAlign:'center' }}>
+        <div className="glass-panel" style={{ width:360, padding:32, textAlign:'center', margin:'auto' }}>
           <h2 style={{ marginBottom:8 }}>No 2FA setup found</h2>
           <p style={{ color: T.subText }}>We couldn't find a pending 2FA secret. Please visit the enable 2FA page to generate a new secret.</p>
           <div style={{ display:'flex', gap:10, marginTop:18, justifyContent:'center' }}>
@@ -45,7 +45,7 @@ function Confirm2FA() {
 
   return (
     <div style={{ display:'flex', alignItems:'center', justifyContent:'center', minHeight:'100vh', background: T.bg, color: T.text }}>
-      <div style={{ width:360, padding:28, borderRadius:16, background: T.card, border: `1px solid ${T.border}`, textAlign:'center' }}>
+      <div className="glass-panel" style={{ width:360, padding:32, textAlign:'center', margin:'auto' }}>
         <h2 style={{ marginBottom:8 }}>Confirm Two-Factor</h2>
         <p style={{ color: T.subText }}>Enter the 6-digit code from your authenticator app for <strong>{secret || 'your account'}</strong></p>
 
